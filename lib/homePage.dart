@@ -1,55 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:my_mob_proj/loginScreen.dart';
-import 'package:my_mob_proj/schedulePage.dart';
-
+import 'data.dart';
 
 class HomePage extends StatefulWidget {
-
-  String login;
-
-  HomePage(
-      this.login
-      );
-
   @override
-  _HomePageState createState() => _HomePageState(login);
+  _HomePageState createState() => _HomePageState();
 }
 
-
-
 class _HomePageState extends State<HomePage> {
+  late String login;
+  late List<String> groups;
+  String? selectedGroup;
 
-  String login;
-
-  _HomePageState(
-      this.login
-      );
+  _HomePageState() {
+    ScheduleData scheduleData = ScheduleData();
+    groups = scheduleData.getGroupsNames();
+  }
 
   Widget buildBackBtn() {
     return Container(
-      height: 50,
-      width: 250,
-      decoration: BoxDecoration(
-          color: Color (0xffFFAEBC),
-          borderRadius: BorderRadius.circular(20)),
-      child: MaterialButton(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => LoginScreen())
-          );
-        },
-        child: Text(
-          'Return',
-          style: TextStyle(
-              fontSize: 25,
-              color: Colors.white,
-              fontWeight: FontWeight.w500
+        height: 50,
+        width: 50,
+        decoration: BoxDecoration(
+            color: Colors.transparent, borderRadius: BorderRadius.circular(20)),
+        //padding: EdgeInsets.fromLTRB(10, 40, 0, 0),
+        child: CircleAvatar(
+          backgroundColor: Colors.transparent,
+          child: IconButton(
+            color: Color(0xffFFAEBC),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Icon(Icons.arrow_back_ios_new),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   Widget buildScheduleBtn() {
@@ -57,69 +41,40 @@ class _HomePageState extends State<HomePage> {
       height: 50,
       width: 250,
       decoration: BoxDecoration(
-          color: Color (0xffFFAEBC),
-          borderRadius: BorderRadius.circular(20)),
+          color: Color(0xffFFAEBC), borderRadius: BorderRadius.circular(20)),
       child: MaterialButton(
         onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => schedulePage())
-          );
+          Navigator.pushNamed(context, '/schedule',
+              arguments: {'selectedGroup': selectedGroup});
         },
         child: Text(
           'To Schedule',
           style: TextStyle(
-              fontSize: 25,
-              color: Colors.white,
-              fontWeight: FontWeight.w500
-          ),
+              fontSize: 25, color: Colors.white, fontWeight: FontWeight.w500),
         ),
-      ),
-    );
-  }
-  
-  Widget buildPicklist() {
-
-    const List<String> groupsList = <String>[
-      'CE-41',
-      'CE-42',
-      'CE-43',
-      'CE-44'
-    ];
-
-    String dropdownvalue = groupsList.first;
-
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          DropdownButton(
-              value: 'Choose your group',
-              icon: const Icon(Icons.keyboard_arrow_down),
-              items: groupsList.map((String groupsList) {
-                return DropdownMenuItem(
-                    value: groupsList,
-                    child: Text(groupsList)
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  dropdownvalue = newValue!;
-                });
-              }),
-        ],
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+
+    setState(() {
+      login = arguments['login'];
+    });
+
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
           child: Stack(
             children: <Widget>[
+              Padding(
+                padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
+                child: buildBackBtn(),
+              ),
               Container(
                 height: double.infinity,
                 width: double.infinity,
@@ -128,19 +83,14 @@ class _HomePageState extends State<HomePage> {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Color(0x66A0E7E5),
-                          Color(0x99A0E7E5),
-                          Color(0xccA0E7E5),
-                          Color(0xffA0E7E5),
-                        ]
-                    )
-                ),
+                      Color(0x66A0E7E5),
+                      Color(0x99A0E7E5),
+                      Color(0xccA0E7E5),
+                      Color(0xffA0E7E5),
+                    ])),
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 25,
-                      vertical: 120
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 120),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -149,16 +99,41 @@ class _HomePageState extends State<HomePage> {
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 40,
-                            fontWeight: FontWeight.bold
+                            fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        width: 200,
+                        child: DropdownButtonFormField<String>(
+                          value: selectedGroup,
+                          style:
+                              TextStyle(fontSize: 14, color: Color(0xffFFAEBC)),
+                          decoration: InputDecoration(
+                              labelText: 'Select group...',
+                              contentPadding: EdgeInsets.all(5)),
+                          icon: Icon(Icons.arrow_drop_down_circle_outlined),
+                          items: groups
+                              .map((group) => DropdownMenuItem(
+                                    value: group,
+                                    child: Text(group),
+                                  ))
+                              .toList(),
+                          onChanged: (String? newGroup) {
+                            setState(() {
+                              selectedGroup = newGroup;
+                            });
+                          },
                         ),
                       ),
                       SizedBox(
-                        height: 450,
+                        height: 20,
                       ),
-                      //buildPicklist(),
-                      buildScheduleBtn(),
-                      SizedBox(height: 25,),
-                      buildBackBtn()
+                      selectedGroup == null
+                          ? SizedBox.shrink()
+                          : buildScheduleBtn(),
+                      SizedBox(
+                        height: 400,
+                      ),
+                      SizedBox(height: 25),
                     ],
                   ),
                 ),
@@ -170,6 +145,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
-

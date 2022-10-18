@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_mob_proj/schedulePage.dart';
+import 'homePage.dart';
 import 'loginScreen.dart';
 
 void main() {
@@ -11,7 +13,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Home Task 1',
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) =>  LoginScreen(),
+        '/home': (context) =>  HomePage(),
+        '/schedule': (context) =>  schedulePage(),
+      },
     );
   }
 }

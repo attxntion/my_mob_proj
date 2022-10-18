@@ -1,20 +1,20 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:my_mob_proj/homePage.dart';
 
 class LoginScreen extends StatefulWidget {
-
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  String login = '';
 
   final loginController = TextEditingController();
 
   final passwordController = TextEditingController();
 
-  final GlobalKey<FormState> _globalKey =  GlobalKey<FormState>();
+  final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
 
   bool isRememberMe = false;
 
@@ -25,10 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Text(
           'Login',
           style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold
-          ),
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 10),
         Container(
@@ -38,40 +35,31 @@ class _LoginScreenState extends State<LoginScreen> {
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 6,
-                    offset: Offset(0,2)
-                )
-
-              ]
-          ),
+                    color: Colors.black26, blurRadius: 6, offset: Offset(0, 2))
+              ]),
           height: 60,
           child: TextFormField(
+            onChanged: (value) {
+              login = value;
+            },
             controller: loginController,
             keyboardType: TextInputType.text,
-            style: TextStyle(
-                color: Colors.black87
-            ),
+            style: TextStyle(color: Colors.black87),
             decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.only(top: 14),
-                prefixIcon: Icon(
-                    Icons.account_circle_outlined ,
-                    color: Color(0xffFFAEBC)
-                ),
+                prefixIcon: Icon(Icons.account_circle_outlined,
+                    color: Color(0xffFFAEBC)),
                 hintText: 'Login',
-                hintStyle: TextStyle(
-                    color: Colors.black38
-                )
-            ),
+                hintStyle: TextStyle(color: Colors.black38)),
             validator: (String? value) {
-              if(value == null || value.isEmpty){
+              log('Validator is working');
+              if (value == null || value.isEmpty) {
                 return 'Enter login';
               }
               return null;
             },
           ),
-
         )
       ],
     );
@@ -84,10 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Text(
           'Password',
           style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold
-          ),
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 10),
         Container(
@@ -97,40 +82,25 @@ class _LoginScreenState extends State<LoginScreen> {
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 6,
-                    offset: Offset(0,2)
-                )
-
-              ]
-          ),
+                    color: Colors.black26, blurRadius: 6, offset: Offset(0, 2))
+              ]),
           height: 60,
           child: TextFormField(
               controller: passwordController,
               obscureText: true,
-              style: TextStyle(
-                  color: Colors.black87
-              ),
+              style: TextStyle(color: Colors.black87),
               decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.only(top: 14),
-                  prefixIcon: Icon(
-                      Icons.lock,
-                      color: Color(0xffFFAEBC)
-                  ),
+                  prefixIcon: Icon(Icons.lock, color: Color(0xffFFAEBC)),
                   hintText: 'Password',
-                  hintStyle: TextStyle(
-                      color: Colors.black38
-                  )
-              ),
+                  hintStyle: TextStyle(color: Colors.black38)),
               validator: (String? value) {
                 if (value == null || value.isEmpty) {
                   return 'Enter password';
                 }
                 return null;
-              }
-          ),
-
+              }),
         )
       ],
     );
@@ -143,10 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
         onPressed: () => print("Forgot Password pressed"),
         child: Text(
           'Forgot Password?',
-          style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -172,10 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           Text(
             'Remember me',
-            style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold
-            ),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           )
         ],
       ),
@@ -184,27 +148,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget buildLoginBtn() {
     return Container(
-      key: _globalKey,
       height: 50,
       width: 250,
       decoration: BoxDecoration(
-          color: Color (0xffFFAEBC),
-          borderRadius: BorderRadius.circular(20)),
+          color: Color(0xffFFAEBC), borderRadius: BorderRadius.circular(20)),
       child: MaterialButton(
         onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => HomePage(loginController.text))
-          );
+          Navigator.pushNamed(context, '/home', arguments: {'login': login});
         },
         child: Text(
           'Login',
           style: TextStyle(
-              fontSize: 25,
-              color: Colors.white,
-              fontWeight: FontWeight.w500
-          ),
+              fontSize: 25, color: Colors.white, fontWeight: FontWeight.w500),
         ),
       ),
     );
@@ -214,26 +169,20 @@ class _LoginScreenState extends State<LoginScreen> {
     return GestureDetector(
       onTap: () => print("Sign Up Pressed"),
       child: RichText(
-        text: TextSpan(
-            children: [
-              TextSpan(
-                  text: 'Don`t have an Account?         ',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500
-                  )
-              ),
-              TextSpan(
-                  text: 'Sign Up',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold
-                  )
-              )
-            ]
-        ),
+        text: TextSpan(children: [
+          TextSpan(
+              text: 'Don`t have an Account?         ',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500)),
+          TextSpan(
+              text: 'Sign Up',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold))
+        ]),
       ),
     );
   }
@@ -254,19 +203,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Color(0x66A0E7E5),
-                          Color(0x99A0E7E5),
-                          Color(0xccA0E7E5),
-                          Color(0xffA0E7E5),
-                        ]
-                    )
-                ),
+                      Color(0x44A0E7E5),
+                      Color(0x99A0E7E5),
+                      Color(0xddA0E7E5),
+                      Color(0xffA0E7E5),
+                    ])),
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 25,
-                      vertical: 120
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 120),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -275,10 +219,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 40,
-                            fontWeight: FontWeight.bold
-                        ),
+                            fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 50),
+                      Image.asset(
+                        'assets/images/logo.png',
+                        width: 150,
+                        height: 150,
+                      ),
+                      SizedBox(height: 20),
                       buildLogin(),
                       SizedBox(height: 50),
                       buildPassword(),
@@ -286,6 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       buildRememberCb(),
                       Divider(
                         height: 30,
+                        thickness: 2,
                         color: Colors.white,
                       ),
                       buildLoginBtn(),
@@ -304,4 +253,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
